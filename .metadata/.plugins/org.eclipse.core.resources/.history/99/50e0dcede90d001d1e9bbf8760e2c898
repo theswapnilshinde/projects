@@ -1,0 +1,27 @@
+package com.microservice.user.service;
+
+import java.util.List;import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import com.microservice.user.entity.Contact;
+
+
+
+public class ContactServiceImpliment implements ContactService {
+
+	List<Contact> list = List.of( 
+			new Contact(49L,"Swapnil", "swapnil@emil.com",49L),
+			new Contact(51L,"jimm", "jimm@emil.com",51L)
+			
+			);
+			
+	
+	@Override
+	public List<Contact> getContactsOfUser(Long userId) {
+		list.stream().filter(contact -> contact.getUserId().equals(userId)).collect(Collectors.toList());
+		return null;
+		
+	}
+	
+
+}

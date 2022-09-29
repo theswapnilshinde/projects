@@ -1,0 +1,36 @@
+package com.application.blog.responce_payloads_Dto;
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@Getter
+@Setter
+@Data
+public class UserDto {
+	
+    private Long id;
+	private String name;
+	private String email;
+	private String password;
+	private String about;
+	
+	public UserDto (String name, String email, String password, String about) {
+		super();
+		this.id = id; 
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.about = about;
+	}
+
+	@Override
+	public String toString() {
+		return "UserDto [ name=" + name + ", email=" + email + ", password=" + password + ", about="
+				+ about + "]";
+	}
+	
+
+}

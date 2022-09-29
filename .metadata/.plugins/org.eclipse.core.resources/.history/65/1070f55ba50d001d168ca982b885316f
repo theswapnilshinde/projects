@@ -1,0 +1,12 @@
+spring.datasource.url=jdbc:postgresql://localhost:5432/blog
+spring.datasource.username=postgres
+spring.datasource.password=Swapnil@123
+# Hibernate properties
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+# create, create-drop
+spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.hibernate.ddl-auto=create
+logging.level.org.hibernate.sql=debug
+server.port=8080
+spring.jpa.show-sql=true
+
