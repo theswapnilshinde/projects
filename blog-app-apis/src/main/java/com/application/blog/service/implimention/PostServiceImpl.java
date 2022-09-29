@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.application.blog.entities.Categories;
@@ -18,8 +19,11 @@ import com.application.blog.exceptions.ResourceNotFoundException;
 import com.application.blog.repositories.CategoriesRepositary;
 import com.application.blog.repositories.PostRepo;
 import com.application.blog.repositories.UserRepositary;
+import com.application.blog.responce_payloads_Dto.AllPostResponce;
 import com.application.blog.responce_payloads_Dto.PostDto;
 import com.application.blog.service.PostService;
+
+
 
 @Service
 public class PostServiceImpl implements PostService{
@@ -56,11 +60,9 @@ public class PostServiceImpl implements PostService{
 	
 	@Override
 	public PostDto updatePost(PostDto postDto, Integer postId) {
-		Post post = this.postRepo.findById(postId).orElseThrow(() ->  new ResourceNotFoundException("Post", "id", postId));
-		
+		Post post = this.postRepo.findById(postId).orElseThrow(() ->  new ResourceNotFoundException("Post", "id", postId));	
 		post.setTital(postDto.getTital());
-		post.setContent(postDto.getContent());
-		
+		post.setContent(postDto.getContent());		
 		Post post1= this.postRepo.save(post);
 		return this.modelMapper.map(post1, PostDto.class);
 	}
@@ -74,17 +76,29 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public List<PostDto> getAllPost(Integer pageNumber, Integer pageSize) {
+	public AllPostResponce getAllPost(Integer pageNumber, Integer pageSize, String sortBy) {
 		
 		
-		Pageable p = PageRequest.of(pageNumber, pageSize);
+	//	Pageable p = PageRequest.of(pageNumber, pageSize);
+		Pageable p = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
 		
-		Page<Post> postPost = this.postRepo.findAll(p);
+		Page<Post> pagePost = this.postRepo.findAll(p);
 		
-		List<Post> allPost =	postPost.getContent();
+		List<Post> allPost =	pagePost.getContent();
 
 		List <PostDto> postDto = allPost.stream().map((post) ->this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
-			return postDto;
+		
+		AllPostResponce postResponce = new AllPostResponce();
+		
+		postResponce.setContent(postDto);
+		postResponce.setPageNumber(pagePost.getNumber());
+		postResponce.setPageSize(pagePost.getSize());
+		postResponce.setTotalElement(pagePost.getTotalElements());
+		postResponce.setTotalPage(pagePost.getTotalPages());
+		postResponce.setLastPage(pagePost.isLast());
+		
+		
+		return postResponce;
 	}
 
 	@Override
