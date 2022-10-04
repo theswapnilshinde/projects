@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.parser.Part.IgnoreCaseType;
 import org.springframework.stereotype.Service;
 
 import com.application.blog.entities.Categories;
@@ -61,7 +62,7 @@ public class PostServiceImpl implements PostService{
 	@Override
 	public PostDto updatePost(PostDto postDto, Integer postId) {
 		Post post = this.postRepo.findById(postId).orElseThrow(() ->  new ResourceNotFoundException("Post", "id", postId));	
-		post.setTital(postDto.getTital());
+		post.setTital(postDto.getTitle());
 		post.setContent(postDto.getContent());		
 		Post post1= this.postRepo.save(post);
 		return this.modelMapper.map(post1, PostDto.class);
@@ -76,11 +77,17 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public AllPostResponce getAllPost(Integer pageNumber, Integer pageSize, String sortBy) {
+	public AllPostResponce getAllPost(Integer pageNumber, Integer pageSize, String sortBy,String sortDir) {
 		
-		
-	//	Pageable p = PageRequest.of(pageNumber, pageSize);
-		Pageable p = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+		Sort sort = null;
+		if(sortDir.equalsIgnoreCase("asc"))
+		{
+			sort=Sort.by(sortBy).ascending();
+		}
+		else {
+			sort =Sort.by(sortBy).descending();
+		}
+		Pageable p = PageRequest.of(pageNumber, pageSize, sort);
 		
 		Page<Post> pagePost = this.postRepo.findAll(p);
 		
@@ -89,6 +96,7 @@ public class PostServiceImpl implements PostService{
 		List <PostDto> postDto = allPost.stream().map((post) ->this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
 		
 		AllPostResponce postResponce = new AllPostResponce();
+		
 		
 		postResponce.setContent(postDto);
 		postResponce.setPageNumber(pagePost.getNumber());
@@ -138,7 +146,7 @@ public class PostServiceImpl implements PostService{
 
 	@Override
 	public List<PostDto> serchPosts(String keyword) {
-	List<Post>allPost =	this.postRepo.findAll();
+	List<Post>allPost =	this.postRepo.serchByTital("%"+keyword+"%");
 
 	List <PostDto> postDto = allPost.stream().map((post) ->this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
 
