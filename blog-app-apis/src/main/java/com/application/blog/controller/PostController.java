@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.application.blog.entities.ImageSave;
 import com.application.blog.responce_payloads_Dto.AllPostResponce;
 import com.application.blog.responce_payloads_Dto.ApiResponce;
 import com.application.blog.responce_payloads_Dto.PostDto;
 import com.application.blog.service.PostService;
+import com.application.blog.service.implimention.ImageSaveImpl;
 
 
 @CrossOrigin
@@ -29,9 +31,12 @@ public class PostController {
 
 	@Autowired
 	private PostService postService;
+	
+	@Autowired
+	private ImageSaveImpl imageSaveImpl;
 
 	@PostMapping("/user/{userId}/category/{categoryId}/posts")
-	public ResponseEntity<PostDto> createUser(
+	public ResponseEntity<PostDto> createPost(
 			@RequestBody PostDto postDto,
 			@PathVariable Integer userId,
 			@PathVariable Integer categoryId)
@@ -65,7 +70,7 @@ public class PostController {
 			@RequestParam(value = "pageSize",defaultValue = "2",required = false) Integer pageSize ,
 			@RequestParam(value = "sortBy",defaultValue = "postId",required = false) String sortBy,
 			@RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir
-			
+
 			){
 
 		AllPostResponce allPostResponce = this.postService.getAllPost(pageNumber,pageSize,sortBy,sortDir);
@@ -85,27 +90,35 @@ public class PostController {
 	{
 	    this.postService.deletePost(postId);
 		return new ApiResponce("Post is Successfully Deleted",true);
-		
+
 	}
 
 	@PutMapping("/post/{postId}")
 	public ResponseEntity<PostDto> upadatePost(@RequestBody PostDto postDto, @PathVariable Integer postId)
 	{
-		
+
 		PostDto postDto2 = this.postService.updatePost( postDto, postId);
-	    
-		return new ResponseEntity<PostDto>(postDto2,HttpStatus.CREATED);
-		
+
+		return new ResponseEntity<>(postDto2,HttpStatus.CREATED);
+
 	}
-	
+
 	@GetMapping("/serch/{keywords}")
 	public ResponseEntity<List<PostDto>> serchPostByTital(
 	@PathVariable("keywords")	 String   keywords)
 	{
 		List<PostDto> posts  = this.postService.serchPosts(keywords);
-		return new ResponseEntity<List<PostDto>>(posts,HttpStatus.OK);
+		return new ResponseEntity<>(posts,HttpStatus.OK);
 
-		
+
+	}
+	
+	
+	@PostMapping("/add")
+	public ResponseEntity<ImageSave> createPost(@RequestBody ImageSave imageSave)
+	{
+		ImageSave imageSave2 = this.imageSaveImpl.create(imageSave);
+		return new ResponseEntity<>(imageSave2,HttpStatus.CREATED);
 	}
 
 }

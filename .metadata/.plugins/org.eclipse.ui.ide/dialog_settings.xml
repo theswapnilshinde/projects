@@ -42,6 +42,7 @@
 		<item key="SmartImportRootWizardPage.STORE_NESTED_PROJECTS" value="true"/>
 		<item key="SmartImportRootWizardPage.STORE_CONFIGURE_NATURES" value="true"/>
 		<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+			<item value="C:\AllData\SpringBootPojects2\Admin"/>
 			<item value="C:\Users\Shinde.swapnil\Downloads\authentication"/>
 			<item value="C:\AllData\SpringBootPojects\Ecommerce-Backend"/>
 			<item value="C:\AllData\SpringBootPojects\shoppingcart"/>

@@ -19,14 +19,14 @@ public interface PostRepo  extends JpaRepository<Post, Integer>{
 	List<Post> findByCategories(Categories categories);
 	List<Post> findByCategories(Integer categoriesId);
 	List<Post> findByCategoriesCategoriesId(Integer categoriesId);
-	
+
 	//List<Post> findByTitalContainig( String tital);
-	
-	
+
+
 	// case-in-sensitive searching
 //	@Query("select p from Post p where lower(p.title) like concat('%', :keyword,'%')")
 	//List<Post> searchPostHavingKeyword(@Param("keyword") String keyword);
-	@Query("select p from Post p where p.tital like :keyword") 
+	@Query("select p from Post p where p.tital like :keyword")
 	List<Post> serchByTital(@Param("keyword") String tital);
 
 }

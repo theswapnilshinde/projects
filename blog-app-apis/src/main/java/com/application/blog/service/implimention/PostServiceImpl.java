@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.parser.Part.IgnoreCaseType;
 import org.springframework.stereotype.Service;
 
 import com.application.blog.entities.Categories;
@@ -58,12 +57,12 @@ public class PostServiceImpl implements PostService{
 		Post updatepost = this.postRepo.save(post);
 		return this.modelMapper.map(updatepost, PostDto.class);
 	}
-	
+
 	@Override
 	public PostDto updatePost(PostDto postDto, Integer postId) {
-		Post post = this.postRepo.findById(postId).orElseThrow(() ->  new ResourceNotFoundException("Post", "id", postId));	
+		Post post = this.postRepo.findById(postId).orElseThrow(() ->  new ResourceNotFoundException("Post", "id", postId));
 		post.setTital(postDto.getTitle());
-		post.setContent(postDto.getContent());		
+		post.setContent(postDto.getContent());
 		Post post1= this.postRepo.save(post);
 		return this.modelMapper.map(post1, PostDto.class);
 	}
@@ -71,14 +70,14 @@ public class PostServiceImpl implements PostService{
 
 	@Override
 	public void deletePost(Integer postId) {
-     
+
 		Post post = this.postRepo.findById(postId).orElseThrow(() ->  new ResourceNotFoundException("Post", "id", postId));
 		this.postRepo.delete(post);
 	}
 
 	@Override
 	public AllPostResponce getAllPost(Integer pageNumber, Integer pageSize, String sortBy,String sortDir) {
-		
+
 		Sort sort = null;
 		if(sortDir.equalsIgnoreCase("asc"))
 		{
@@ -88,24 +87,24 @@ public class PostServiceImpl implements PostService{
 			sort =Sort.by(sortBy).descending();
 		}
 		Pageable p = PageRequest.of(pageNumber, pageSize, sort);
-		
+
 		Page<Post> pagePost = this.postRepo.findAll(p);
-		
+
 		List<Post> allPost =	pagePost.getContent();
 
 		List <PostDto> postDto = allPost.stream().map((post) ->this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
-		
+
 		AllPostResponce postResponce = new AllPostResponce();
-		
-		
+
+
 		postResponce.setContent(postDto);
 		postResponce.setPageNumber(pagePost.getNumber());
 		postResponce.setPageSize(pagePost.getSize());
 		postResponce.setTotalElement(pagePost.getTotalElements());
 		postResponce.setTotalPage(pagePost.getTotalPages());
 		postResponce.setLastPage(pagePost.isLast());
-		
-		
+
+
 		return postResponce;
 	}
 

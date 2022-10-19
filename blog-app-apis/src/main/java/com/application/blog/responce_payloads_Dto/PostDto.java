@@ -8,7 +8,7 @@ import lombok.Data;
 public class PostDto {
 
 	private int postId;
-	private String tital;
+	private String title;
 
 	private String content;
 
